@@ -56,7 +56,7 @@ public class ReviewService {
                             ReviewResponse.builder()
                                     .id(newReview.getId())
                                     .movieTitle(newReview.getMovieTitle())
-                                    .rating(newReview.getReview())
+                                    .rating(newReview.getRating())
                                     .review(newReview.getReview())
                                     .userId(newReview.getUserId())
                                     .createdAt(newReview.getCreatedAt())
@@ -102,5 +102,14 @@ public class ReviewService {
                 .data(reviews)
                 .status(resultStatus)
                 .build();
+    }
+
+    public Double movieRating(String title) {
+        Double ratings= reviewRepository.getReviewAverage(title);
+        if(Objects.isNull(ratings))
+        {
+            return 0.0;
+        }
+        return ratings;
     }
 }

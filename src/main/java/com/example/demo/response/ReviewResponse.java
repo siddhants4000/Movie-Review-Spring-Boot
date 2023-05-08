@@ -19,7 +19,7 @@ public class ReviewResponse {
     private String movieTitle;
 
     @JsonProperty("rating")
-    private String rating;
+    private Double rating;
 
     @JsonProperty("review")
     private String review;

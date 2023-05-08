@@ -23,7 +23,7 @@ public class Review {
     private String movieTitle;
 
     @Column(name = "rating")
-    private String rating;
+    private Double rating;
 
     @Column(name = "review")
     private String review;

@@ -17,7 +17,7 @@ public class ReviewRequest {
     private String movieTitle;
 
     @NotNull
-    private String rating;
+    private Double rating;
 
     @NotNull
     private String review;

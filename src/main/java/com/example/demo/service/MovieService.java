@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Movie;
+import com.example.demo.entity.Review;
 import com.example.demo.enums.StatusCode;
 import com.example.demo.model.Status;
 import com.example.demo.model.WrapperResponse;
 import com.example.demo.repo.MovieRepository;
+import com.example.demo.repo.ReviewRepository;
 import com.example.demo.request.MovieRequest;
 import com.example.demo.response.MovieResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,12 @@ public class MovieService {
     @Autowired
     MovieRepository movieRepository;
 
+    @Autowired
+    ReviewRepository reviewRepository;
+
+    @Autowired
+    ReviewService reviewService;
+
     public WrapperResponse<MovieResponse> addMovie(MovieRequest movieRequest) {
         if(Objects.nonNull(movieRepository.findByTitle(movieRequest.getTitle()))){
             Status resultStatus= Status.builder()
@@ -34,8 +42,6 @@ public class MovieService {
             Movie newMovie=Movie.builder()
                     .title(movieRequest.getTitle())
                     .genre(movieRequest.getGenre())
-                    .rating(movieRequest.getRating())
-                    .reviews(movieRequest.getReviews())
                     .releaseDate(LocalDate.now())
                     .length(movieRequest.getLength())
                     .build();
@@ -54,8 +60,8 @@ public class MovieService {
                                     .id(newMovie.getId())
                                     .title(newMovie.getTitle())
                                     .genre(newMovie.getGenre())
-                                    .rating(newMovie.getRating())
-                                    .reviews(newMovie.getReviews())
+                                    .rating(0.0)
+                                    .reviews(null)
                                     .releaseDate(newMovie.getReleaseDate())
                                     .length(newMovie.getLength())
                                     .build()
@@ -120,8 +126,8 @@ public class MovieService {
                             .id(findMovie.getId())
                             .title(findMovie.getTitle())
                             .genre(findMovie.getGenre())
-                            .rating(findMovie.getRating())
-                            .reviews(findMovie.getReviews())
+                            .rating(reviewService.movieRating(findMovie.getTitle()))
+                            .reviews(reviewRepository.findByMovieTitle(findMovie.getTitle()))
                             .releaseDate(findMovie.getReleaseDate())
                             .length(findMovie.getLength())
                             .build()

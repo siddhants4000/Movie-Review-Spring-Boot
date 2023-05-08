@@ -20,12 +20,6 @@ public class MovieRequest {
     @NotNull
     private String genre;
 
-    @NotNull
-    private String rating;
-
-    @NotNull
-    private String reviews;
-
     @Nullable
     private LocalDate releaseDate;
 

@@ -27,10 +27,7 @@ public class Movie {
     private String genre;
 
     @Column(name = "rating")
-    private String rating;
-
-    @Column(name = "reviews")
-    private String reviews;
+    private Double rating;
 
     @Column(name = "releaseDate")
     private LocalDate releaseDate;
