@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Setter
@@ -32,5 +32,5 @@ public class Review {
     private String userId;
 
     @Column(name = "createdAt")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

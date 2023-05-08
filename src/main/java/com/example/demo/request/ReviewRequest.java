@@ -3,7 +3,7 @@ package com.example.demo.request;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Getter
@@ -25,5 +25,5 @@ public class ReviewRequest {
     @NotNull
     private String userId;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

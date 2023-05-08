@@ -31,4 +31,9 @@ public class MovieController {
     public List<Movie> allMovies() {
         return movieService.getAllMovies();
     }
+
+    @GetMapping("search")
+    public WrapperResponse<MovieResponse> searchMovie(@RequestParam String title) {
+        return movieService.searchMovie(title);
+    }
 }

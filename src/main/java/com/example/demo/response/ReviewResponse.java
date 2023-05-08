@@ -3,7 +3,7 @@ package com.example.demo.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -28,5 +28,5 @@ public class ReviewResponse {
     private String userId;
 
     @JsonProperty("createdAt")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

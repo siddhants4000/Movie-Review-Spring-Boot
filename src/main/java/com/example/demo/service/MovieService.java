@@ -51,13 +51,13 @@ public class MovieService {
             return WrapperResponse.<MovieResponse>builder()
                     .data(
                             MovieResponse.builder()
-                                    .id(movieRequest.getLength())
-                                    .title(movieRequest.getTitle())
-                                    .genre(movieRequest.getGenre())
-                                    .rating(movieRequest.getRating())
-                                    .reviews(movieRequest.getReviews())
+                                    .id(newMovie.getId())
+                                    .title(newMovie.getTitle())
+                                    .genre(newMovie.getGenre())
+                                    .rating(newMovie.getRating())
+                                    .reviews(newMovie.getReviews())
                                     .releaseDate(newMovie.getReleaseDate())
-                                    .length(movieRequest.getLength())
+                                    .length(newMovie.getLength())
                                     .build()
                     )
                     .status(resultStatus)
@@ -93,5 +93,41 @@ public class MovieService {
 
     public List<Movie> getAllMovies() {
         return (List<Movie>) movieRepository.findAll();
+    }
+
+    public WrapperResponse<MovieResponse> searchMovie(String title) {
+        if (Objects.isNull(movieRepository.findByTitle(title))){
+            Status resultStatus = Status.builder()
+                    .code(StatusCode.BAD_REQUEST.getCode())
+                    .message("Movie does not exists")
+                    .success(Boolean.TRUE)
+                    .build();
+
+            return WrapperResponse.<MovieResponse>builder()
+                    .status(resultStatus)
+                    .build();
+        } else {
+            Movie findMovie= movieRepository.findByTitle(title);
+
+            Status resultStatus= Status.builder()
+                    .code(StatusCode.SUCCESS.getCode())
+                    .message("Movie has been found.")
+                    .success(Boolean.TRUE)
+                    .build();
+
+            return WrapperResponse.<MovieResponse>builder()
+                    .data(MovieResponse.builder()
+                            .id(findMovie.getId())
+                            .title(findMovie.getTitle())
+                            .genre(findMovie.getGenre())
+                            .rating(findMovie.getRating())
+                            .reviews(findMovie.getReviews())
+                            .releaseDate(findMovie.getReleaseDate())
+                            .length(findMovie.getLength())
+                            .build()
+                    )
+                    .status(resultStatus)
+                    .build();
+        }
     }
 }
