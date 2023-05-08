@@ -112,4 +112,30 @@ public class ReviewService {
         }
         return ratings;
     }
+
+    public WrapperResponse<ReviewResponse> deleteReview(String title, String userId) {
+        if(Objects.isNull(reviewRepository.findByMovieTitleAndUserId(title, userId))) {
+            Status resultStatus = Status.builder()
+                    .code(StatusCode.BAD_REQUEST.getCode())
+                    .message("Review does not exists")
+                    .success(Boolean.TRUE)
+                    .build();
+
+            return WrapperResponse.<ReviewResponse>builder()
+                    .status(resultStatus)
+                    .build();
+        } else {
+            int reviewId= reviewRepository.findByMovieTitleAndUserId(title, userId).getId();
+            reviewRepository.deleteById(reviewId);
+            Status resultStatus= Status.builder()
+                    .code(StatusCode.SUCCESS.getCode())
+                    .message("Review has been deleted.")
+                    .success(Boolean.TRUE)
+                    .build();
+
+            return WrapperResponse.<ReviewResponse>builder()
+                    .status(resultStatus)
+                    .build();
+        }
+    }
 }

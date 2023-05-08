@@ -31,4 +31,10 @@ public class ReviewController {
     public WrapperResponse<List<Review>> getReviewByUserId(@RequestParam String userId) {
         return reviewService.getReviewByUserId(userId);
     }
+
+    @PostMapping("/delete")
+    public WrapperResponse<ReviewResponse> deleteMovie(@RequestParam String title,
+                                                      @RequestParam String userId) {
+        return reviewService.deleteReview(title, userId);
+    }
 }

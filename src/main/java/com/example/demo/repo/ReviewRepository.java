@@ -17,4 +17,6 @@ public interface ReviewRepository extends CrudRepository<Review, Integer>, JpaSp
 
     @Query(value = "select AVG(rating) from review where movie_title=?", nativeQuery = true)
     Double getReviewAverage(String movieTitle);
+
+    Review findByMovieTitleAndUserId(String movieTitle, String userId);
 }
