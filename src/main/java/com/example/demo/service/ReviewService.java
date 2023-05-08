@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -64,5 +65,42 @@ public class ReviewService {
                     .status(resultStatus)
                     .build();
         }
+    }
+
+    public WrapperResponse<List<Review>> getReviewByTitle(String title) {
+        if (Objects.isNull(movieRepository.findByTitle(title))) {
+            Status resultStatus = Status.builder()
+                    .code(StatusCode.BAD_REQUEST.getCode())
+                    .message("Movie does not exists.")
+                    .success(Boolean.TRUE)
+                    .build();
+            return WrapperResponse.<List<Review>>builder()
+                    .status(resultStatus)
+                    .build();
+        }else {
+            List<Review> reviews=reviewRepository.findByMovieTitle(title);
+            Status resultStatus = Status.builder()
+                    .code(StatusCode.SUCCESS.getCode())
+                    .message("Review has been found successfully.")
+                    .success(Boolean.TRUE)
+                    .build();
+            return WrapperResponse.<List<Review>>builder()
+                    .data(reviews)
+                    .status(resultStatus)
+                    .build();
+        }
+    }
+
+    public WrapperResponse<List<Review>> getReviewByUserId(String userId) {
+        List<Review> reviews=reviewRepository.findByUserId(userId);
+        Status resultStatus = Status.builder()
+                .code(StatusCode.SUCCESS.getCode())
+                .message("Reviews have been found successfully.")
+                .success(Boolean.TRUE)
+                .build();
+        return WrapperResponse.<List<Review>>builder()
+                .data(reviews)
+                .status(resultStatus)
+                .build();
     }
 }

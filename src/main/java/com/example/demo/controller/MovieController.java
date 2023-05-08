@@ -36,4 +36,9 @@ public class MovieController {
     public WrapperResponse<MovieResponse> searchMovie(@RequestParam String title) {
         return movieService.searchMovie(title);
     }
+
+    @GetMapping("searchByGenre")
+    public WrapperResponse<List<Movie>> searchByGenre(@RequestParam String genre) {
+        return movieService.searchByGenre(genre);
+    }
 }

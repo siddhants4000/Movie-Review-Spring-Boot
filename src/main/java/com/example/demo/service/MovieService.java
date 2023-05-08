@@ -130,4 +130,17 @@ public class MovieService {
                     .build();
         }
     }
+
+    public WrapperResponse<List<Movie>> searchByGenre(String genre) {
+        List<Movie> movies=movieRepository.findByGenre(genre);
+        Status resultStatus = Status.builder()
+                .code(StatusCode.SUCCESS.getCode())
+                .message("Movies have been found successfully.")
+                .success(Boolean.TRUE)
+                .build();
+        return WrapperResponse.<List<Movie>>builder()
+                .data(movies)
+                .status(resultStatus)
+                .build();
+    }
 }
