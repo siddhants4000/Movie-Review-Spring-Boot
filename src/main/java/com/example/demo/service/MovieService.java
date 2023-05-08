@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -42,6 +43,7 @@ public class MovieService {
             Movie newMovie=Movie.builder()
                     .title(movieRequest.getTitle())
                     .genre(movieRequest.getGenre())
+                    .rating(0.0)
                     .releaseDate(LocalDate.now())
                     .length(movieRequest.getLength())
                     .build();
@@ -60,7 +62,7 @@ public class MovieService {
                                     .id(newMovie.getId())
                                     .title(newMovie.getTitle())
                                     .genre(newMovie.getGenre())
-                                    .rating(0.0)
+                                    .rating(newMovie.getRating())
                                     .reviews(null)
                                     .releaseDate(newMovie.getReleaseDate())
                                     .length(newMovie.getLength())
@@ -98,6 +100,10 @@ public class MovieService {
     }
 
     public List<Movie> getAllMovies() {
+        for(int i=1;i<=movieRepository.count();i++){
+            Optional<Movie> movie=movieRepository.findById(i);
+            movie.get().setRating(reviewService.movieRating(movie.get().getTitle()));
+        }
         return (List<Movie>) movieRepository.findAll();
     }
 
