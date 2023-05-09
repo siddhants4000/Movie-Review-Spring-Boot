@@ -17,27 +17,27 @@ public class MovieController {
     @Autowired
     MovieService movieService;
 
-    @PostMapping("add")
+    @PostMapping("admin/add")
     public WrapperResponse<MovieResponse> addMovie(@RequestBody MovieRequest movieRequest) {
         return movieService.addMovie(movieRequest);
     }
 
-    @PostMapping("delete")
+    @PostMapping("admin/delete")
     public WrapperResponse<MovieResponse> deleteMovie(@RequestParam String title) {
         return movieService.deleteMovie(title);
     }
 
-    @GetMapping("all")
+    @GetMapping("user/all")
     public List<Movie> allMovies() {
         return movieService.getAllMovies();
     }
 
-    @GetMapping("search")
+    @GetMapping("user/search")
     public WrapperResponse<MovieResponse> searchMovie(@RequestParam String title) {
         return movieService.searchMovie(title);
     }
 
-    @GetMapping("searchByGenre")
+    @GetMapping("user/searchByGenre")
     public WrapperResponse<List<Movie>> searchByGenre(@RequestParam String genre) {
         return movieService.searchByGenre(genre);
     }

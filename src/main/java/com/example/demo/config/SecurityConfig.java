@@ -1,47 +1,57 @@
-//package com.example.demo.config;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-//import org.springframework.security.web.SecurityFilterChain;
-//
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-//public class SecurityConfig {
-//
-//    @Bean
-//    public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withUsername("user")
-//                .password(bCryptPasswordEncoder.encode("user"))
-//                .roles("user")
-//                .build());
-//        manager.createUser(User.withUsername("admin")
-//                .password(bCryptPasswordEncoder.encode("admin"))
-//                .roles("user", "admin")
-//                .build());
-//        return manager;
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.authorizeRequests()
-//                .antMatchers("/library/users/*").hasAnyRole("user", "admin")
-//                .antMatchers("/library/admin/*").hasRole("admin")
-//                .antMatchers("/").permitAll();
-////                .and()
-////                .formLogin();
-//        return httpSecurity.build();
-//    }
-//
-//    @Bean
-//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//}
+package com.example.demo.config;
+
+import com.example.demo.enums.UserRole;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import static com.example.demo.enums.UserRole.*;
+
+
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .antMatchers("/admin/**").hasRole(ADMIN.name())
+                .antMatchers("/user/**").hasAnyRole(ADMIN.name(), USER.name())
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
+    }
+
+    @Override
+    @Bean
+    protected UserDetailsService userDetailsService() {
+        UserDetails admin=User.builder()
+                .username("admin")
+                .password(passwordEncoder().encode("admin"))
+                .roles(ADMIN.name())
+                .build();
+
+        UserDetails user=User.builder()
+                .username("user")
+                .password(passwordEncoder().encode("user"))
+                .roles(USER.name())
+                .build();
+        return new InMemoryUserDetailsManager(admin, user);
+    }
+}

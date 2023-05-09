@@ -17,22 +17,22 @@ public class ReviewController {
     @Autowired
     ReviewService reviewService;
 
-    @PostMapping("/add")
+    @PostMapping("/user/add")
     public WrapperResponse<ReviewResponse> addMovie(@RequestBody ReviewRequest reviewRequest) {
         return reviewService.addReview(reviewRequest);
     }
 
-    @GetMapping("/movie-title")
+    @GetMapping("/user/movie-title")
     public WrapperResponse<List<Review>> getReviewByTitle(@RequestParam String title) {
         return reviewService.getReviewByTitle(title);
     }
 
-    @GetMapping("/userId")
+    @GetMapping("/user/userId")
     public WrapperResponse<List<Review>> getReviewByUserId(@RequestParam String userId) {
         return reviewService.getReviewByUserId(userId);
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/admin/delete")
     public WrapperResponse<ReviewResponse> deleteMovie(@RequestParam String title,
                                                       @RequestParam String userId) {
         return reviewService.deleteReview(title, userId);
