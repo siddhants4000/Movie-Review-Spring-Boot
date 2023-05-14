@@ -9,6 +9,7 @@ import com.example.demo.repo.ReviewRepository;
 import com.example.demo.request.ReviewRequest;
 import com.example.demo.response.ReviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,12 @@ public class ReviewService {
 
     @Autowired
     MovieRepository movieRepository;
+
+    @Autowired
+    EmailSenderService emailSenderService;
+
+    @Value("${sendMailTo}")
+    private String emailTo;
 
     public WrapperResponse<ReviewResponse> addReview(ReviewRequest reviewRequest) {
         if (Objects.isNull(movieRepository.findByTitle(reviewRequest.getMovieTitle()))) {
@@ -50,6 +57,12 @@ public class ReviewService {
                     .build();
 
             reviewRepository.save(newReview);
+
+            String subject= "Review Added Successfully.";
+
+            String body= "Review Details are- \n "+ newReview;
+
+            emailSenderService.sendEmail(emailTo, subject, body);
 
             return WrapperResponse.<ReviewResponse>builder()
                     .data(
