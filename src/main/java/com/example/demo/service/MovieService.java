@@ -10,6 +10,7 @@ import com.example.demo.repo.ReviewRepository;
 import com.example.demo.request.MovieRequest;
 import com.example.demo.response.MovieResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,6 +29,12 @@ public class MovieService {
 
     @Autowired
     ReviewService reviewService;
+
+    @Autowired
+    EmailSenderService emailSenderService;
+
+    @Value("${sendMailTo}")
+    private String emailTo;
 
     public WrapperResponse<MovieResponse> addMovie(MovieRequest movieRequest) {
         if(Objects.nonNull(movieRepository.findByTitle(movieRequest.getTitle()))){
@@ -55,6 +62,12 @@ public class MovieService {
                     .build();
 
             movieRepository.save(newMovie);
+
+            String subject= "Movie Added Successfully.";
+
+            String body= "Movie Details are- \n "+ newMovie;
+
+            emailSenderService.sendEmail(emailTo, subject, body);
 
             return WrapperResponse.<MovieResponse>builder()
                     .data(
@@ -86,6 +99,13 @@ public class MovieService {
                     .build();
         } else {
             int movieId= movieRepository.findByTitle(title).getId();
+
+            String subject= "Movie Has Been Deleted Successfully.";
+
+            String body= "Movie Details are- \n "+ movieRepository.findById(movieId);
+
+            emailSenderService.sendEmail(emailTo, subject, body);
+
             movieRepository.deleteById(movieId);
             Status resultStatus= Status.builder()
                     .code(StatusCode.SUCCESS.getCode())

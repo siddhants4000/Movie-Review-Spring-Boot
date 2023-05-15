@@ -139,6 +139,13 @@ public class ReviewService {
                     .build();
         } else {
             int reviewId= reviewRepository.findByMovieTitleAndUserId(title, userId).getId();
+
+            String subject= "Review Has Been Deleted Successfully.";
+
+            String body= "Review Details are- \n "+ reviewRepository.findById(reviewId);
+
+            emailSenderService.sendEmail(emailTo, subject, body);
+
             reviewRepository.deleteById(reviewId);
             Status resultStatus= Status.builder()
                     .code(StatusCode.SUCCESS.getCode())
